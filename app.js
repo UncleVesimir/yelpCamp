@@ -11,7 +11,7 @@ const campgroundsArray = [
   {name: "Tight-Nose Pass", image: "http://www.dunvegancastle.com/wp-content/uploads/2016/05/Glenbrittle-campsite-4.jpg"},
   {name: "Dunwall Canyon", image: "https://s-media-cache-ak0.pinimg.com/736x/58/72/ba/5872ba6c61d63ad851f1d1e5640f9ab4--camping-wild-camping-places.jpg"},
   {name: "Brough Gill", image: "https://s-media-cache-ak0.pinimg.com/736x/86/6f/a3/866fa375624de6eddece752f5e100d4e.jpg"},
-{}]
+]
 
 app.set("view engine", "ejs");
 
