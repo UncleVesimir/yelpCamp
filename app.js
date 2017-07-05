@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+const bodyParser = require('body-parser');
+
 const campgroundsArray = [
   {name: "Salmon Creek", image: "http://www.ardnamurchanstudycentre.co.uk/images/campsiteview.jpg"},
   {name: "Granite Hill", image: "https://coolcamping.com/system/images/369/great-langdale-national-trust-campsite-large.jpg"},
@@ -13,6 +15,8 @@ const campgroundsArray = [
 
 app.set("view engine", "ejs");
 
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.listen(process.env.PORT || 8000, function (){
   console.log("Yelp Camp Server running - Listening on port 8000");
 });
@@ -23,4 +27,19 @@ app.get("/", function (req, res){
 
 app.get("/campgrounds", function(req, res){
 res.render("campgrounds", {campgrounds: campgroundsArray});
+});
+
+app.get("/campgrounds/new", function(req, res){
+  res.render('newGround');
+});
+
+
+app.post("/campgrounds", function(req, res){
+  let name = req.body.name;
+  let img = req.body.image;
+  let newCamp = {name: name, image: img};
+  campgroundsArray.push(newCamp);
+
+  res.redirect("/campgrounds");
+
 })
