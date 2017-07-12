@@ -29,7 +29,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 const campGroundSchema = new mongoose.Schema({
   name: String,
-  image: String
+  image: String,
+  description: String
 })
 
 const Campground = mongoose.model('Campground', campGroundSchema);
@@ -48,21 +49,38 @@ Campground.find({}, function(err, allCampgrounds){
   if(err){
     console.error(err);
   }
-  res.render("campgrounds", {campgrounds: allCampgrounds});
+  res.render("index", {campgrounds: allCampgrounds});
 })
 
 });
+
+
 
 app.get("/campgrounds/new", function(req, res){
   res.render('newGround');
 });
 
+app.get("/campgrounds/:id", function (req, res){
+
+  console.log(req.params.id);
+  Campground.findById(req.params.id)
+    .then((foundCamp) =>{res.send("show", foundCamp)})
+      .catch((err) => {console.log(error)})
+    // , function(err, foundCamp){
+  //   if(err){
+  //     console.log(err)
+  //   } 
+  //   console.log(foundCamp);
+  //   res.render('show', {campground: foundCamp})
+})
+
 
 app.post("/campgrounds", function(req, res){
   let name = req.body.name;
   let img = req.body.image;
-  let newCamp = {name: name, image: img};
-  
+  let description = req.body.description;
+  let newCamp = {name: name, image: img, description: description};
+
  Campground.create(newCamp).then((addedCamp)=>{
    console.log(`Added new Camp Ground:\n ${addedCamp}`)
    res.redirect("/campgrounds");
