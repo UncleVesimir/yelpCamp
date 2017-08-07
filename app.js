@@ -19,6 +19,18 @@ mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"))
+// 
+app.use(function(req, res, next){
+  res.locals.currentUser = req.user;
+  next();
+});
+
+function isLoggedIn(req , res, next){
+  if(req.isAutheticated()){
+    return next();
+  }
+  res.redirect("/login");
+}
 seedDB();
 
 // Passport config
@@ -49,13 +61,12 @@ Campground.find({}, function(err, allCampgrounds){
     console.error(err);
   }
   res.render("campgrounds/index", {campgrounds: allCampgrounds});
-})
 
 });
 
 
 
-app.get("/campgrounds/new", function(req, res){
+app.get("/campgrounds/new", isLoggedIn, function(req, res){
   res.render('campgrounds/newGround');
 });
 
@@ -84,7 +95,7 @@ app.post("/campgrounds", function(req, res){
 // COMMENT ROUTES
 // =========================
 
-app.get("/campgrounds/:id/comments/new", function(req,res){
+app.get("/campgrounds/:id/comments/new", isLoggedIn, function(req,res){
   Campground.findById(req.params.id, function(err, campground){
     if(err){
       console.log(err);
