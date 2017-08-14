@@ -18,7 +18,10 @@ const User = require("./models/user");
 const campgroundsRoutes = require('./routes/campgrounds');
 const commentsRoutes = require('./routes/comments');
 const indexRoutes = require('./routes/index');
+//Middleware
+const isLoggedIn = require("./middleware/index").isLoggedIn;
 
+//Set-up and Config of Mongo, template engine and other 3rd party middleware.
 mongoose.connect("mongodb://localhost/yelp_camp", {useMongoClient:true} );
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
@@ -46,20 +49,12 @@ passport.deserializeUser(User.deserializeUser());
 // Set-up local for rendered views//
 app.use(function(req, res, next){
   res.locals.currentUser = req.user;
-  res.locals.isCampOwner = null;
   next();
 });
+
 app.use('/campgrounds', campgroundsRoutes);
 app.use('/campgrounds/:id/comments', isLoggedIn, commentsRoutes);
 app.use('/', indexRoutes);
-
-function isLoggedIn(req , res, next){
-  console.log(req.url);
-  if(req.isAuthenticated()){
-    return next();
-  }
-  res.redirect("/login");
-}
 
 app.listen(process.env.PORT || 8000, function (){
   console.log("Yelp Camp Server running - Listening on port 8000");

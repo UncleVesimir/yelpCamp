@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Campground = require("../models/campground");
+const isLoggedIn = require("../middleware/index").isLoggedIn;
+const checkIfCampAuthor = require("../middleware/index").checkIfCampAuthor;
 
 router.get("/", function(req, res){
 Campground.find({}, function(err, allCampgrounds){
@@ -9,8 +11,6 @@ Campground.find({}, function(err, allCampgrounds){
   res.render("campgrounds/index", {campgrounds: allCampgrounds});
   });
 });
-
-
 
 //CREATE Campground
 
@@ -31,12 +31,12 @@ router.post("/", isLoggedIn, function(req, res){
 
 
  Campground.create(newCamp).then((addedCamp)=>{
-   console.log(`Added new Camp Ground:\n ${addedCamp}`)
+  //  console.log(`Added new Camp Ground:\n ${addedCamp}`)
    res.redirect("/campgrounds");
  }).catch((err)=>console.log(err))
 });
 
-router.get("/:id", checkIfCampAuthorLax, function(req, res){
+router.get("/:id", function(req, res){
 
   Campground.findById(req.params.id).populate('comments').exec()
     .then((foundCamp) =>{
@@ -47,14 +47,14 @@ router.get("/:id", checkIfCampAuthorLax, function(req, res){
 
 
 //UPDATE Campground
-router.get("/:id/edit", isLoggedIn, checkIfCampAuthorStrict, function(req, res){
+router.get("/:id/edit", isLoggedIn, checkIfCampAuthor, function(req, res){
   Campground.findById(req.params.id)
     .then((campground)=>{
        res.render("campgrounds/edit", {campground:campground});
     });
 });
 
-router.post("/:id", isLoggedIn, checkIfCampAuthorStrict, function(req, res){
+router.put("/:id", isLoggedIn, checkIfCampAuthor, function(req, res){
   Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCamp){
     if(err){
       console.log(err);
@@ -67,7 +67,7 @@ router.post("/:id", isLoggedIn, checkIfCampAuthorStrict, function(req, res){
 })
 
 //DELETE
-router.delete("/:id", isLoggedIn, checkIfCampAuthorStrict, function(req,res){
+router.delete("/:id", isLoggedIn, checkIfCampAuthor, function(req,res){
   Campground.findByIdAndRemove(req.params.id, function(err){
     if(err){
       console.log(err);
@@ -76,50 +76,8 @@ router.delete("/:id", isLoggedIn, checkIfCampAuthorStrict, function(req,res){
   })
 });
 
-//Auth Middleware.
-function isLoggedIn(req , res, next){
-  if(req.isAuthenticated()){
-    return next();
-  }
-  res.redirect("/login");
-}
 
-function checkIfCampAuthorStrict(req, res, next){
-  Campground.findById(req.params.id, function(err, campground){
-    if(err){
-      return res.redirect("back");
-    }
-    if(campground.author.id.equals(req.user._id)){
-      
-      res.locals.isCampOwner = true;
-      next();
-    }
-    else{
-      return res.redirect("back");
-    }
-  });
-};
-function checkIfCampAuthorLax(req, res, next){
-  Campground.findById(req.params.id, function(err, campground){
-    if(err){
-      return res.redirect("back");
-    }
-    if(req.user){
-      if(campground.author.id.equals(req.user._id)){
-    
-        res.locals.isCampOwner = true;
-        next();
-      }
-      else{
-        next();
-      }
-    }
-    else{
-      next();
-    }
-  });
-};
-  
+
 
 
 module.exports = router;
