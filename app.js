@@ -4,7 +4,8 @@ const express = require('express'),
       mongoose = require('mongoose'),
       seedDB = require("./seeds"),
       passport = require("passport"),
-      LocalStrategy = require("passport-local");
+      LocalStrategy = require("passport-local").Strategy,
+      methodOverride = require("method-override");
 
 
 
@@ -23,19 +24,10 @@ mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
-// 
-app.use(function(req, res, next){
-  res.locals.currentUser = req.user;
-  next();
-});
+app.use(methodOverride("_method"));
 
-function isLoggedIn(req , res, next){
-  if(req.isAuthenticated()){
-    return next();
-  }
-  res.redirect("/login");
-}
-seedDB();
+
+// seedDB();
 
 // Passport config
 
@@ -51,10 +43,27 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Set-up local for rendered views//
+app.use(function(req, res, next){
+  res.locals.currentUser = req.user;
+  res.locals.isCampOwner = null;
+  next();
+});
+app.use('/campgrounds', campgroundsRoutes);
+app.use('/campgrounds/:id/comments', isLoggedIn, commentsRoutes);
+app.use('/', indexRoutes);
+
+function isLoggedIn(req , res, next){
+  console.log(req.url);
+  if(req.isAuthenticated()){
+    return next();
+  }
+  res.redirect("/login");
+}
+
 app.listen(process.env.PORT || 8000, function (){
   console.log("Yelp Camp Server running - Listening on port 8000");
 });
 
-app.use('/campgrounds', campgroundsRoutes);
-app.use('/campgrounds/:id/comments', isLoggedIn, commentsRoutes);
-app.use('/', indexRoutes);
+
+

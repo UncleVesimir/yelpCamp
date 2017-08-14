@@ -63,8 +63,8 @@ function seedDB() {
       });
 
       console.log("Seeded grounds added");
-    }
-  });
+     }
+    });
 
 
 }

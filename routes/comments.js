@@ -8,6 +8,7 @@ router.get("/new", function(req,res){
       console.log(err);
     }
     else{
+
       res.render("comments/new", {campground: campground});
     }
   })
@@ -18,11 +19,16 @@ router.post("/", function(req,res){
   Campground.findById(req.params.id, function(err, campground){
     if(err){
       console.log(err);
-      res.redirect("/campgrounds")
+      res.redirect("/campgrounds" + req.params.id);
     }
     else{
       Comment.create(req.body.comment)
         .then((comment)=>{
+         
+          comment.author.id = req.user._id;
+          comment.author.username = req.user.username;
+          comment.save();
+
           campground.comments.unshift(comment);
           campground.save();
           res.redirect(`/campgrounds/${campground._id}`)
