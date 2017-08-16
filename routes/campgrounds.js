@@ -32,8 +32,12 @@ router.post("/", isLoggedIn, function(req, res){
 
  Campground.create(newCamp).then((addedCamp)=>{
   //  console.log(`Added new Camp Ground:\n ${addedCamp}`)
+   req.flash('success', "Campground successfully added!");
    res.redirect("/campgrounds");
- }).catch((err)=>console.log(err))
+ }).catch((err)=>{
+  req.flash('error', "Failed to create campground");
+  res.redirect("/campgrounds");
+   console.log(err)})
 });
 
 router.get("/:id", function(req, res){

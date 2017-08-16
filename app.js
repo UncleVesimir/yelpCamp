@@ -5,12 +5,13 @@ const express = require('express'),
       seedDB = require("./seeds"),
       passport = require("passport"),
       LocalStrategy = require("passport-local").Strategy,
-      methodOverride = require("method-override");
+      methodOverride = require("method-override"),
+      flash = require("connect-flash");
 
 
 
 //Models
-const Campground = require("./models/campground");
+const Campground/*?*/ = require("./models/campground");
 const Comment = require("./models/comment");
 const User = require("./models/user");
 //Routes
@@ -28,12 +29,12 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
+app.use(flash());
 
 
 // seedDB();
 
 // Passport config
-
 app.use(require("express-session")({
   secret: "hootoonanana",
   saveUninitialized: false,
@@ -49,6 +50,8 @@ passport.deserializeUser(User.deserializeUser());
 // Set-up local for rendered views//
 app.use(function(req, res, next){
   res.locals.currentUser = req.user;
+  res.locals.successMessage = req.flash('success');
+  res.locals.errorMessage = req.flash('error');
   next();
 });
 
