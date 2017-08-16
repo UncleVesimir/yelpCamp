@@ -29,17 +29,16 @@
       </div>
     </div>
   </nav>
-  <% if(errorMessage %% errorMessage.length > 1) { %>
+  <% if(errorMessage && errorMessage.length > 1) { %>
     <div class="container">
       <div class="alert alert-danger" role="alert">
-        <=% errorMessage>
+        <%= errorMessage %>
       </div>
     </div>
-  <% } if(successMessage %% successMessage.length > 1){ %>
+  <% } if(successMessage && successMessage.length > 1){ %>
     <div class="container">
         <div class="alert alert-success" role="alert">
-          <=% successMessage>
+          <%= successMessage %>
         </div>
       </div>
     <% }%>
-  <
