@@ -8,7 +8,7 @@ Campground.find({}, function(err, allCampgrounds){
   if(err){
     console.error(err);
   }
-  res.render("campgrounds/index", {campgrounds: allCampgrounds});
+  res.render("campgrounds/index", {campgrounds: allCampgrounds, page:'campgrounds'});
   });
 });
 
@@ -23,6 +23,7 @@ router.post("/", isLoggedIn, function(req, res){
       name: req.body.name,
       image: req.body.image,
       description: req.body.description,
+      price: req.body.price,
       author:{
         id: req.user._id,
         username:req.user.username
