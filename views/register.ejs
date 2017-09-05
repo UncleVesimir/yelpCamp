@@ -8,10 +8,32 @@
     <div style="width:30%; margin: 25px auto;">
       <form action="/register" method="POST">
         <div class="form-group">
-          <input class="form-control" type="text" placeholder="Username" name="username">
+          <label for="username">Username</label>
+          <input class="form-control" id="username" type="text" placeholder="Username" name="user[username]">
         </div>
         <div class="form-group">
-          <input class="form-control" type="password" placeholder="Password" name="password">
+          <label for="firstName">First Name</label>
+          <input class="form-control" id="firstName" type="text" placeholder="Your First Name" name="user[firstName]">
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input class="form-control" id="lastName" type="text" placeholder="Your Last Name" name="user[lastName]">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input class="form-control" id="email" type="email" placeholder="A valid email address" name="user[email]">
+        </div>
+        <div class="form-group">
+            <label for="avatar">Profile Picture</label>
+            <input class="form-control" id="avatar" type="email" placeholder="A URL to your profile picture" name="user[avatar]">
+          </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+          <input class="form-control" type="password" placeholder="Password" name="user[password]">
+        </div>
+        <div class="form-group">
+            <label for="adminCode">Admin Code</label>
+          <input class="form-control" type="text" placeholder="Admin Code" name="user[adminCode]">
         </div>
         <div class="form-group">
           <button class="btn btn-large btn-primary btn-block" type="submit">Sign-Up!</button>

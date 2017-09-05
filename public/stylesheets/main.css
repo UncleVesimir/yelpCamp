@@ -13,3 +13,13 @@
 .deleteButton{
   display:inline-block;
 }
+/* Google Maps CSS */
+#map{
+  height: 400px;
+  width: 100%;
+}
+
+.userCampList{
+  width: 100px;
+  height: 100px;
+}

@@ -11,12 +11,18 @@ router.get("/register", function(req, res){
 });
 
 router.post("/register", function(req, res){
-  let newUser = new User({username: req.body.username});
+  let userPass = req.body.user.password;
+  let userRegistrationInfo = req.body.user;
+  delete userRegistrationInfo.password;
 
-  User.register(newUser, req.body.password, function(err, user){
+  let newUser = new User(userRegistrationInfo);
+
+  if(req.body.adminCode === "secretAdminCode123"){
+    newUser.isAdmin = true;
+  }
+  User.register(newUser, userPass, function(err, user){
     if(err){
-      console.log(err)
-      // req.flash('error', err.message);
+      req.flash('error', err.message);
       return res.render('register',{errorMessage: err.message});
     }
     passport.authenticate("local")(req, res, function(){
@@ -31,7 +37,12 @@ router.get("/login", function(req, res){
 });
 
 router.post("/login", passport.authenticate('local', {
-  successRedirect: "/campgrounds", failureRedirect: "/login"}));
+  failureRedirect: "/login", failureFlash: true}),
+  function(req, res){
+    req.flash('login', `Welcome back, ${req.user.username}!`);
+    res.redirect('/campgrounds');
+  }
+);
 
 router.get("/logout", function(req, res){
   req.logout();
@@ -39,4 +50,4 @@ router.get("/logout", function(req, res){
   res.redirect("/");
 });
 
-module.exports = router;
+module.exports = router; 

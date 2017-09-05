@@ -88,4 +88,3 @@ router.delete('/:comment_id',checkCommentOwner, function(req, res){
     })
 })
 module.exports = router;
-//Ownership check Middleware

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/stylesheets/main.css">
   <title>YelpCamp</title>
 </head>
@@ -38,18 +39,31 @@
         </div>
     </div>
 </nav>
-  <% if(errorMessage && errorMessage.length > 1) { %>
+
+
+<% if(currentUser && currentUser.isAdmin){ %>
+  <div class="container">
+      <span class="label label-info">Logged in with admin privileges</span>
+  </div>
+  <hr>
+  <% } if(errorMessage && errorMessage.length > 0) { %>
     <div class="container">
       <div class="alert alert-danger" role="alert">
-        <%= errorMessage %>
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <%= errorMessage %>
       </div>
     </div>
-  <% } if(successMessage && successMessage.length > 1){ %>
+  <% } if(successMessage && successMessage.length > 0){ %>
     <div class="container">
         <div class="alert alert-success" role="alert">
-          <%= successMessage %>
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span> <%= successMessage %>
+        </div>
+      </div>
+  <% } if(loginMessage && loginMessage.length > 0){ %>
+    <div class="container">
+        <div class="alert alert-info" role="alert">
+            <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> <%= loginMessage %>
         </div>
       </div>
     <% }%>
-
-<div class="container">
+    
+    <div class="container">

@@ -2,18 +2,23 @@
 
 
     <header class="jumbotron">
-      <div class="container">
-        <h1>Our YelpGrounds</h1>
-        <p>View our hand-picked CampGrounds from all over the world!</p>
+      <div class="container text-center">
+        <% if(!currentUser){ %>
+          <h1><i class="fa fa-fire fa-1x"></i> Welcome to YelpGrounds!</h1>
+          <p>View our hand-picked CampGrounds from all over the world!</p>
+          <% } else { %>
+        <h1><i class="fa fa-fire fa-1x"></i> Our current YelpGrounds</h1>
+        <p>Take a look below...</p>
+        <% } %>
         <p>
-          <a class="btn btn-primary btn-large" href="/campgrounds/new">Add a new Campground</a>
+          <a class="btn btn-primary btn-large pull-left" href="/campgrounds/new">Add a new Campground</a>
         </p>
       </div>    
     </header>
 
     <div class="row">
       <div class="col-lg-12">
-        <h3>Our most popular CampGrounds.</h3>
+        <h3>Our most popular CampGrounds:</h3>
       </div>
     </div>
 

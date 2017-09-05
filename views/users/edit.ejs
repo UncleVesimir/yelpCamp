@@ -1,0 +1,36 @@
+<% include ../partials/header %>
+
+<div class="row">
+  <h1 style="text-align:center">Edit your YelpCamp Profile Information</h1>
+
+
+  <div style="width:30%; margin: 25px auto;">
+    <form action="/users/<%=user._id %>?_method=PUT" method="POST">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input class="form-control" id="firstName" type="text" value="<%= user.firstName %>" name="updatedUser[firstName]">
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input class="form-control" id="lastName" type="text" value="<%= user.firstName %>" name="updatedUser[lastName]">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control" id="email" type="email" value="<%= user.firstName %>" name="updatedUser[email]">
+      </div>
+      <div class="form-group">
+          <label for="avatar">Profile Picture</label>
+          <input class="form-control" id="avatar" type="text" value="<%= user.firstName %>" name="updatedUser[avatar]">
+        </div>
+      <div class="form-group">
+        <button class="btn btn-large btn-primary btn-block" type="submit">Update</button>
+      </div>
+    </form>
+    <a href="/users/<= user._id %>">Go back</a>
+  </div>
+</div>
+
+
+
+
+<% include ../partials/footer %>

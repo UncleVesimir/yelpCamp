@@ -8,7 +8,8 @@
         <li class="list-group-item active">Info 1</li>
         <li class="list-group-item">Info 2</li>
         <li class="list-group-item">Info 3</li>
-      </div>  
+      </div>
+      <div id="map"></div> 
     </div>
     <div class="col-md-9">
       <div class="thumbnail">
@@ -18,9 +19,11 @@
           <h4><a href=""><%=campground.name%></a></h4>
           <p> <%= campground.description %></p>
           <p> 
-            <em>Submitted By: <%= campground.author.username %></em>
+            <em>Submitted By:
+               <a href="/users/<%= campground.author.id %>"><%= campground.author.username %></a>, <%= moment(campground.createdAt).fromNow() %>
+            </em>
           </p>
-          <% if(currentUser && campground.author.id.equals(currentUser._id)) { %>
+          <% if(currentUser && (campground.author.id.equals(currentUser._id) || currentUser.isAdmin)) { %>
           <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit</a>
           <form class="deleteButton" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
             <button class="btn btn-danger">Delete Campground</button>
@@ -37,9 +40,9 @@
           <div class="row">
             <div class="col-md-12"></div>
             <strong><%= comment.author.username %></strong>
-            <span class="pull-right">10 Days Ago</span>
+            <span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>
             <p><%= comment.text %></p>
-             <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
+             <% if(currentUser && (campground.author.id.equals(currentUser._id) || currentUser.isAdmin)) { %>
               <a class="btn btn-xs btn-warning" href="/campgrounds/<%= campground._id%>/comments/<%= comment._id %>/edit">Edit</a>
               <form class="deleteButton" action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
                 <button class="btn btn-xs btn-danger">Delete</button>
@@ -53,7 +56,34 @@
     
   </div>
 
-
+  <script>
+    function initMap() {
+      var lat = <%= campground.lat %>;
+      var lng = <%= campground.lng %>;
+      var center = {lat: lat, lng: lng };
+      var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: center,
+          scrollwheel: false
+      });
+      var contentString = `
+        <strong><%= campground.name %><br />
+        <%= campground.location %></strong>
+        <p><%= campground.description %></p>
+      `
+      var infowindow = new google.maps.InfoWindow({
+        content: contentString
+      });
+      var marker = new google.maps.Marker({
+          position: center,
+          map: map
+      });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+    }
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwxdAKQCmSUa21rYjcczInPex43MGYRyQ&callback=initMap"></script>
 
 
 

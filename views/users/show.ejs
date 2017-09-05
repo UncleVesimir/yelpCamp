@@ -1,0 +1,54 @@
+<% include ../partials/header %>
+
+  <h1>User Page</h1>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <div class="thumbnail">
+        <img src="<%= user.avatar %>" alt="An image of the user">
+        <div class="caption">
+          <h3>
+            <%= user.firstName %>
+              <%= user.lastName %>
+          </h3>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa minima libero aperiam ipsam vitae voluptas, aspernatur
+            placeat corporis nemo assumenda facilis dolorem, rerum vel saepe eius itaque id. Iusto, deserunt!</p>
+          <p>
+            <a href="mailto:<%= user.email %>">
+              <%= user.email %>
+            </a>
+          </p>
+          <% if(currentUser && (user._id.equals(currentUser._id) || currentUser.isAdmin)){ %>
+          <a href="/users/<%= user.id %>/edit" class="btn btn-warning">Edit</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-8">
+      <% if(userCreatedCamps.noCamps){ %>
+        <h3>
+          <%= user.firstName %>
+            <%= user.lastName %> is yet to make a Campground...</h3>
+        <% } else { %>
+          <h3>
+            <%= user.firstName %>
+              <%= user.lastName %>'s Campgrounds</h3>
+          <% userCreatedCamps.forEach(function(camp){ %>
+            <div class="media">
+              <div class="media-left">
+                <a href="/campgrounds/<%= camp.id %>">
+                    <img class="media-object userCampList" src="<%= camp.image %>" alt="Image of <%= camp.name %>">
+                  </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <%= camp.name %>
+                </h4>
+                <%= camp.description %>
+              </div>
+            </div>
+            <% })%>
+        <% } %>
+
+        
+      <% include ../partials/footer %>
